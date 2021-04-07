@@ -23,3 +23,31 @@ class Grade(Base):
     exam_id = Column(Integer)
     student_id = Column(Integer, ForeignKey(Student.id))
     exam_score = Column(Integer)
+
+engine = create_engine("sqlite:///students.sqlite")
+conn = engine.connect()
+session = Session(bind=engine)
+
+Base.metadata.create_all(engine)
+
+classroom1 = Classroom(teacher_name = "Jerry's Dad")
+classroom2 = Classroom(teacher_name = "Jerry")
+
+jerry = Student(name='Jerry', hobby = 'gardening', classroom_id = 1)
+muhammed = Student(name = 'Muhammed', hobby = 'swimming', classroom_id = 2)
+
+exam_j1 = Grade(exam_id = 1, student_id = 1, exam_score = 1)
+exam_j2 = Grade(exam_id = 2, student_id = 1, exam_score = 0)
+exam_j3 = Grade(exam_id = 3, student_id = 1, exam_score = -25)
+
+exam_m1 = Grade(exam_id = 1, student_id = 2, exam_score = 100)
+exam_m2 = Grade(exam_id = 2, student_id = 2, exam_score = 100)
+exam_m3 = Grade(exam_id = 3, student_id = 2, exam_score = 100)
+
+objects = [classroom1, classroom2, jerry, muhammed,
+           exam_j1, exam_j2, exam_j3, exam_m1,exam_m2,exam_m3]
+
+for obj in objects:
+    session.add(obj)
+
+session.commit()
