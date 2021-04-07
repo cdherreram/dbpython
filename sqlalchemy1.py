@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
 from sqlalchemy.orm import Session
 
 from sqlalchemy.ext.declarative import declarative_base
+import pandas as pd
 
 Base = declarative_base()
 
@@ -51,3 +52,20 @@ for obj in objects:
     session.add(obj)
 
 session.commit()
+
+query = """
+SELECT s.id AS student_id,
+       s.name AS student_name,
+       s.hobby AS student_hobby,
+       c.id AS classroom_id,
+       c.teacher_name,
+       g.exam_id,
+       g.exam_score
+FROM student AS s
+INNER JOIN grade as g 
+    ON s.id = g.student_id
+INNER JOIN classroom as c 
+    ON c.id = s.classroom_id;
+"""
+df = pd.read_sql_query(query, session.bind)
+print(df)
